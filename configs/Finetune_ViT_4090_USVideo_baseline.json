@@ -1,0 +1,208 @@
+{
+    "name": "Finetune_ViT_4090_USVideo_from_pretrain_grayscale",
+    "seed" : 2432044,
+    "log_level": "INFO",
+    "use_non_deterministic": true,
+
+    "path": {
+        "base_dir": "../experiments",
+        "code": "code",
+        "log_file": "run.log",
+        "metric_csv": "metric.csv",
+        "tensorboard_log_dir": "tf-logs",
+        "checkpoint": "checkpoint",
+        "resume_state": null,
+        "trust_resume_state": false
+    },
+
+    "speed_up": {
+        "enable_amp": false,
+        "fast_eval": false,
+        "ena_tf32": false
+    },
+
+    "datasets": {
+        "which_dataset": {
+            "train_dataset": {
+                "Paired": {
+                    "name": ["data.USVideo", "USVideoDataset"],
+                    "args": {
+                        "root_dir": "../datasets/train",
+                        "patch_size": 224,
+                        "frame_count": 16,
+                        "full_seq": false,
+                        "data_augmentation": false,
+                        "gray_scale": true
+                    },
+                    "loader_args": {
+                        "batch_size": 8,
+                        "num_workers": 16,
+                        "shuffle": true,
+                        "pin_memory": true,
+                        "drop_last": true
+                    }
+                }
+            },
+            "valid_dataset": {
+                "InDomain": {
+                    "name": ["data.USVideo", "USVideoDataset"],
+                    "args": {
+                        "root_dir": "../datasets/val",
+                        "patch_size": 224,
+                        "frame_count": -1,
+                        "full_seq": true,
+                        "data_augmentation": false,
+                        "gray_scale": true
+                    },
+                    "loader_args": {
+                        "batch_size": 1,
+                        "num_workers": 8,
+                        "shuffle": false,
+                        "pin_memory": true,
+                        "drop_last": false
+                    }
+                },
+                "ExternalA": {
+                    "name": ["data.USVideo", "USVideoDataset"],
+                    "args": {
+                        "root_dir": "../datasets/external_a",
+                        "patch_size": 224,
+                        "frame_count": -1,
+                        "full_seq": true,
+                        "data_augmentation": false,
+                        "gray_scale": true
+                    },
+                    "loader_args": {
+                        "batch_size": 1,
+                        "num_workers": 8,
+                        "shuffle": false,
+                        "pin_memory": true,
+                        "drop_last": false
+                    }
+                },
+                "ExternalB": {
+                    "name": ["data.USVideo", "USVideoDataset"],
+                    "args": {
+                        "root_dir": "../datasets/external_b",
+                        "patch_size": 224,
+                        "frame_count": -1,
+                        "full_seq": true,
+                        "data_augmentation": false,
+                        "gray_scale": true
+                    },
+                    "loader_args": {
+                        "batch_size": 1,
+                        "num_workers": 8,
+                        "shuffle": false,
+                        "pin_memory": true,
+                        "drop_last": false
+                    }
+                },
+                "ExternalC": {
+                    "name": ["data.USVideo", "USVideoDataset"],
+                    "args": {
+                        "root_dir": "../datasets/external_c",
+                        "patch_size": 224,
+                        "frame_count": -1,
+                        "full_seq": true,
+                        "data_augmentation": false,
+                        "gray_scale": true
+                    },
+                    "loader_args": {
+                        "batch_size": 1,
+                        "num_workers": 8,
+                        "shuffle": false,
+                        "pin_memory": true,
+                        "drop_last": false
+                    }
+                }
+            }
+        }
+    },
+
+    "trainer": {
+        "which_trainer": {
+            "name": ["trainer.BaseTrainer", "BaseTrainer"],
+            "args": {
+                "optimizer":
+                    {
+                        "name": ["torch.optim", "AdamW"],
+                        "args": {
+                            "lr": 1e-5,
+                            "betas": [0.9, 0.999],
+                            "eps": 1e-8,
+                            "weight_decay": 0
+                        }
+                    },
+                "init_method": null
+            }
+        },
+        "which_networks": {
+            "default":
+                {
+                    "name": [
+                        "arch.ViT.model_finetune",
+                        "VisionTransformer"
+                    ],
+                    "args": {
+                        "patch_size": 16,
+                        "embed_dim": 768,
+                        "depth": 12,
+                        "num_heads": 12,
+                        "mlp_ratio": 4,
+                        "qkv_bias": true,
+                        "img_size": 224,
+                        "num_classes": 2,
+                        "all_frames": 16,
+                        "tubelet_size": 2,
+                        "drop_rate": 0.0,
+                        "drop_path_rate": 0.1,
+                        "attn_drop_rate": 0.0,
+                        "head_drop_rate": 0.0,
+                        "use_mean_pooling": true,
+                        "init_scale": 0.001,
+                        "with_cp": false
+                    },
+                    "init_weights_path_loose": null,
+                    "trust_checkpoint": false
+                }
+        },
+        "which_losses": {
+            "supervised_loss": [
+                {
+                    "name": [
+                        "loss.loss",
+                        "CrossEntropyLoss"
+                    ],
+                    "args": {
+                        "loss_weight": 1
+                    }
+                }
+            ]
+        },
+        "which_metrics": [
+            {
+                "name": [
+                    "metric.metric",
+                    "ClassificationAccuracy"
+                ],
+                "args": {}
+            }
+        ],
+        "watching_metrics": [
+            "InDomain_ClassificationAccuracy"
+        ]
+    },
+
+    "train": {
+        "n_iter": 26400,
+        "finish_iter": 26400,
+        "report_iter": 440,
+        "val_iter": 440,
+        "save_iter": 2200,
+
+        "iter_per_optim_step": 1,
+
+        "lr_scheduler": "cosine_annealing"
+    }
+}

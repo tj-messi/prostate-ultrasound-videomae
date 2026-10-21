@@ -1,0 +1,34 @@
+# Attribution And Third-Party Notices
+
+This repository contains an adaptation of OpenGVLab/VideoMAEv2:
+https://github.com/OpenGVLab/VideoMAEv2
+
+Its MIT license, Copyright (c) 2023 OpenGVLab, is retained in LICENSE and
+pretrain/LICENSE. Local adaptations include the ultrasound classification
+pipeline, dataset handling, and the all-token reconstruction/loss changes.
+Release preparation adds portable paths, documentation, synthetic tests,
+checkpoint-loading guards, and shared video-level inference.
+
+Existing source headers identify additional origins, including BEiT, timm,
+DeiT, DINO, Facebook, and Ross Wightman. These headers remain in place.
+
+pretrain/dataset/rand_augment.py and random_erasing.py identify Apache-2.0
+origins in timm. The Apache-2.0 license is provided in licenses/Apache-2.0.txt.
+Those notices and applicable terms continue to apply to the relevant files;
+the root MIT license does not replace third-party terms.
+
+Upstream project references:
+- https://github.com/microsoft/unilm/tree/master/beit
+- https://github.com/rwightman/pytorch-image-models
+- https://github.com/facebookresearch/deit
+- https://github.com/facebookresearch/dino
+
+The upstream README's research citation is VideoMAE V2: Scaling Video Masked
+Autoencoders with Dual Masking (https://arxiv.org/abs/2303.16727). That work
+must not be confused with a publication or clinical validation of this
+ultrasound adaptation. No project-specific paper metadata or authorship has
+been invented for this release.
+
+Model weights are hosted separately by the project owner. Neither the code
+license nor this notice grants permissions to patient data or external
+checkpoint files.

@@ -1,0 +1,10 @@
+-r ../requirements.txt
+einops==0.8.1
+piq==0.8.0
+matplotlib==3.10.1
+tensorboardX==2.6.2.2
+opencv-python==4.11.0.86
+pandas==2.2.3
+scipy==1.15.2
+# Optional encoded-video decoding: decord==0.6.0
+# Legacy action classification has separate optional DeepSpeed requirements.

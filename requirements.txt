@@ -1,0 +1,10 @@
+# Install a matching torch/torchvision pair first (see README).
+torch==2.6.0
+torchvision==0.21.0
+timm==0.4.12
+numpy==1.26.4
+Pillow==10.4.0
+loguru==0.7.3
+safetensors==0.5.3
+tensorboard==2.19.0
+tqdm==4.67.1
